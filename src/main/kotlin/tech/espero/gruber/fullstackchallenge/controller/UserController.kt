@@ -24,8 +24,7 @@ class UserController {
     )
 
     data class UpdateUserRequest(
-        val password: String? = null,
-        val userRole: User.UserRole? = null
+        val password: String? = null
     )
 
     data class DeleteUserRequest(
@@ -77,7 +76,7 @@ class UserController {
     fun updateUser(@PathVariable username: String, @RequestBody updateUserRequest: UpdateUserRequest): ResponseEntity<User> {
         userService.ensureCurrentUserOrThrow(username)
 
-        val updatedUser = userService.updateUser(username, updateUserRequest.password, updateUserRequest.userRole)
+        val updatedUser = userService.updateUser(username, updateUserRequest.password)
         return ResponseEntity.ok(updatedUser)
     }
 

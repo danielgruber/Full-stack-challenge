@@ -91,17 +91,12 @@ class UserService {
      */
     fun updateUser(
         username: String,
-        password: String? = null,
-        role: User.UserRole? = null
+        password: String? = null
     ): User {
         val user = userRepo.getByUsername(username) ?: throw UsernameNotFoundException("User $username was not found for update")
 
         if (password != null) {
             user.password = passwordEncoder.encode(password)
-        }
-
-        if (role != null) {
-            user.role = role
         }
 
         userRepo.save(user)

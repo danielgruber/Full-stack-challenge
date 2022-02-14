@@ -30,7 +30,7 @@ class User(
     var depositCents: Int,
 
     @Column(nullable = false)
-    var role: UserRole
+    val role: UserRole
 ): UserDetails {
     /**
      * Represents the user role.
