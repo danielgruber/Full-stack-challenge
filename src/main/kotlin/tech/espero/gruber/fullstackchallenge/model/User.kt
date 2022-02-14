@@ -85,4 +85,8 @@ class User(
     override fun isEnabled(): Boolean {
         return true
     }
+
+    override fun equals(other: Any?): Boolean {
+        return other is User && other.id == id
+    }
 }
