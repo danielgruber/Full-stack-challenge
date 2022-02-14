@@ -58,6 +58,10 @@ class User(
         return this.password
     }
 
+    fun setPassword(password: String) {
+        this.password = password
+    }
+
     override fun getUsername(): String {
         return this.username
     }

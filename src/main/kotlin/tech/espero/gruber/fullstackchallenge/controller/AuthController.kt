@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RestController
 import tech.espero.gruber.fullstackchallenge.security.JwtTokenUtil
 import tech.espero.gruber.fullstackchallenge.security.JwtUserDetailsService
 
-
+/**
+ * Rest controller handling the JWT-based authentication.
+ */
 @RestController
 class AuthController {
     @Autowired
@@ -26,16 +28,19 @@ class AuthController {
     private lateinit var userDetailsService: JwtUserDetailsService
 
     data class JwtRequest(val username: String, val password: String)
-    data class JwtResponse(val jwttoken: String)
+    data class JwtResponse(val token: String)
 
     @RequestMapping(value = ["/authenticate"], method = [RequestMethod.POST])
-    fun createAuthenticationToken(@RequestBody authenticationRequest: JwtRequest): ResponseEntity<*>? {
+    fun createAuthenticationToken(@RequestBody authenticationRequest: JwtRequest): ResponseEntity<JwtResponse> {
         authenticate(authenticationRequest.username, authenticationRequest.password)
         val userDetails = userDetailsService.loadUserByUsername(authenticationRequest.username)
         val token: String = jwtTokenUtil.generateToken(userDetails)
-        return ResponseEntity.ok<Any>(JwtResponse(token))
+        return ResponseEntity.ok(JwtResponse(token))
     }
 
+    /**
+     * Authenticates the user
+     */
     private fun authenticate(username: String, password: String) {
         try {
             authenticationManager.authenticate(UsernamePasswordAuthenticationToken(username, password))
