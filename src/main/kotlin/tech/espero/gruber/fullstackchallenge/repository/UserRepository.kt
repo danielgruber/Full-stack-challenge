@@ -8,5 +8,5 @@ interface UserRepository: CrudRepository<User, UUID> {
     /**
      * Returns user by username.
      */
-    fun getByUsername(username: String): User?
+    fun getByUsernameIgnoreCase(username: String): User?
 }

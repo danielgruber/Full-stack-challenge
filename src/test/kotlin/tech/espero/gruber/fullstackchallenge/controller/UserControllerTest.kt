@@ -53,7 +53,7 @@ class UserControllerTest {
                 jsonPath("$.role").value(ROLE_BUYER)
             )
         } finally {
-            userRepository.getByUsername(TEST_USERNAME)?.let {
+            userRepository.getByUsernameIgnoreCase(TEST_USERNAME)?.let {
                 userRepository.delete(it)
             }
         }
@@ -80,7 +80,7 @@ class UserControllerTest {
                 jsonPath("$.role").value(ROLE_SELLER)
             )
         } finally {
-            userRepository.getByUsername(TEST_USERNAME)?.let {
+            userRepository.getByUsernameIgnoreCase(TEST_USERNAME)?.let {
                 userRepository.delete(it)
             }
         }
@@ -107,7 +107,7 @@ class UserControllerTest {
                 content().contentType(MediaType.APPLICATION_JSON)
             )
         } finally {
-            userRepository.getByUsername(TEST_USERNAME)?.let {
+            userRepository.getByUsernameIgnoreCase(TEST_USERNAME)?.let {
                 userRepository.delete(it)
             }
         }
@@ -143,7 +143,7 @@ class UserControllerTest {
                 content().contentType(MediaType.APPLICATION_JSON)
             )
         } finally {
-            userRepository.getByUsername(TEST_USERNAME)?.let {
+            userRepository.getByUsernameIgnoreCase(TEST_USERNAME)?.let {
                 userRepository.delete(it)
             }
         }
@@ -173,7 +173,7 @@ class UserControllerTest {
                 jsonPath("$.exception").value(PasswordTooWeakException::class.simpleName)
             )
         } finally {
-            userRepository.getByUsername(TEST_USERNAME)?.let {
+            userRepository.getByUsernameIgnoreCase(TEST_USERNAME)?.let {
                 userRepository.delete(it)
             }
         }
@@ -201,7 +201,7 @@ class UserControllerTest {
                 content().contentType(MediaType.APPLICATION_JSON)
             )
         } finally {
-            userRepository.getByUsername("")?.let {
+            userRepository.getByUsernameIgnoreCase("")?.let {
                 userRepository.delete(it)
             }
         }

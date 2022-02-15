@@ -82,6 +82,8 @@ class CommerceService {
             remainingChange -= coin
         }
 
+        userService.updateUserBalance(user.username, 0)
+
         return BuyFeedback(
             total,
             product,

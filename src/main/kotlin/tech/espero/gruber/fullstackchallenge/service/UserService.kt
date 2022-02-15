@@ -1,12 +1,10 @@
 package tech.espero.gruber.fullstackchallenge.service
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.annotation.Bean
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UsernameNotFoundException
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import tech.espero.gruber.fullstackchallenge.exceptions.PasswordTooWeakException
@@ -40,7 +38,7 @@ class UserService {
      * Gets user by username.
      */
     fun getByUsername(username: String): User? {
-        return userRepo.getByUsername(username)
+        return userRepo.getByUsernameIgnoreCase(username)
     }
 
     /**
@@ -74,8 +72,8 @@ class UserService {
         password: String,
         role: User.UserRole
     ): User {
-        if (userRepo.getByUsername(username) != null) {
-            throw UserAlreadyExistsException()
+        if (userRepo.getByUsernameIgnoreCase(username) != null) {
+            throw UserAlreadyExistsException("The username $username is already taken")
         }
 
         validatePasswordStrengthOrThrow(password)
@@ -100,7 +98,7 @@ class UserService {
         username: String,
         password: String? = null
     ): User {
-        val user = userRepo.getByUsername(username) ?: throw UsernameNotFoundException("User $username was not found for update")
+        val user = userRepo.getByUsernameIgnoreCase(username) ?: throw UsernameNotFoundException("User $username was not found for update")
 
         if (password != null) {
             validatePasswordStrengthOrThrow(password)
@@ -119,7 +117,7 @@ class UserService {
         username: String,
         deposit: Int
     ): User {
-        val user = userRepo.getByUsername(username) ?: throw UsernameNotFoundException("User $username was not found for update")
+        val user = userRepo.getByUsernameIgnoreCase(username) ?: throw UsernameNotFoundException("User $username was not found for update")
 
         user.depositCents = deposit
 
@@ -135,7 +133,7 @@ class UserService {
         username: String,
         password: String
     ) {
-        val user = userRepo.getByUsername(username) ?:  throw UsernameNotFoundException("User $username was not found for update")
+        val user = userRepo.getByUsernameIgnoreCase(username) ?:  throw UsernameNotFoundException("User $username was not found for update")
 
         if (!passwordEncoder.matches(password, user.password)) {
             throw PermissionException("You need to know the password of a user to delete it.")

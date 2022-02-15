@@ -118,11 +118,11 @@ class CommerceControllerTest {
             productRepository.delete(it)
         }
 
-        userRepository.getByUsername(TEST_USERNAME_BUYER)?.let {
+        userRepository.getByUsernameIgnoreCase(TEST_USERNAME_BUYER)?.let {
             userRepository.delete(it)
         }
 
-        userRepository.getByUsername(TEST_USERNAME_SELLER)?.let {
+        userRepository.getByUsernameIgnoreCase(TEST_USERNAME_SELLER)?.let {
             userRepository.delete(it)
         }
     }
@@ -333,14 +333,50 @@ class CommerceControllerTest {
         ).andExpect(
             MockMvcResultMatchers.status().isOk
         ).andExpect(
-            MockMvcResultMatchers.jsonPath("$.change").value(arrayOf(50, 10))
+            MockMvcResultMatchers.jsonPath("$.change").isArray
         ).andExpect(
-            MockMvcResultMatchers.jsonPath("$.total").value(10)
+            MockMvcResultMatchers.jsonPath("$.total").value(40)
         ).andExpect(
             MockMvcResultMatchers.jsonPath("$.product.productName").value(PRODUCT_NAME)
         ).andExpect(
             MockMvcResultMatchers.jsonPath("$.product.amountAvailable").value(PRODUCT_AMOUNT - 4)
         )
+    }
+
+    /**
+     * Tests buying a product with inserting more coins will reset rest to 0 of user.
+     */
+    @Test
+    fun testBuyResets() {
+        val buyRequest = JSONObject()
+        buyRequest.put("productId", PRODUCT_ID)
+        buyRequest.put("productAmount", 4)
+
+        // Put enough coins
+        val coinRequest = JSONObject()
+        coinRequest.put("coins", JSONArray(arrayOf(100)))
+
+        mockMvc.perform(
+            RestDocumentationRequestBuilders
+                .post("/deposit")
+                .header("Authorization", "Bearer $buyerJwt")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(coinRequest.toString())
+        ).andExpect(
+            MockMvcResultMatchers.status().isOk
+        )
+
+        mockMvc.perform(
+            RestDocumentationRequestBuilders
+                .post("/buy")
+                .header("Authorization", "Bearer $buyerJwt")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(buyRequest.toString())
+        ).andExpect(
+            MockMvcResultMatchers.status().isOk
+        )
+
+        assertEquals(0, userRepository.getByUsernameIgnoreCase(TEST_USERNAME_BUYER)?.depositCents)
     }
 
     /**
@@ -433,7 +469,7 @@ class CommerceControllerTest {
             MockMvcResultMatchers.status().isOk
         )
 
-        assertEquals(15, userRepository.getByUsername(TEST_USERNAME_BUYER)?.depositCents)
+        assertEquals(15, userRepository.getByUsernameIgnoreCase(TEST_USERNAME_BUYER)?.depositCents)
 
         mockMvc.perform(
             RestDocumentationRequestBuilders
@@ -444,7 +480,7 @@ class CommerceControllerTest {
             MockMvcResultMatchers.status().isOk
         )
 
-        assertEquals(0, userRepository.getByUsername(TEST_USERNAME_BUYER)?.depositCents)
+        assertEquals(0, userRepository.getByUsernameIgnoreCase(TEST_USERNAME_BUYER)?.depositCents)
     }
 
     /**
@@ -461,7 +497,7 @@ class CommerceControllerTest {
             MockMvcResultMatchers.status().isOk
         )
 
-        assertEquals(0, userRepository.getByUsername(TEST_USERNAME_BUYER)?.depositCents)
+        assertEquals(0, userRepository.getByUsernameIgnoreCase(TEST_USERNAME_BUYER)?.depositCents)
     }
 
     //endregion
