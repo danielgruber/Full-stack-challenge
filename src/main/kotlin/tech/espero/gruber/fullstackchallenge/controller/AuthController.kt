@@ -1,5 +1,6 @@
 package tech.espero.gruber.fullstackchallenge.controller
 
+import io.swagger.v3.oas.annotations.Operation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -32,6 +33,10 @@ class AuthController {
     data class JwtRequest(val username: String, val password: String)
     data class JwtResponse(val token: String)
 
+    /**
+     * Authenticates a user by username and password.
+     */
+    @Operation(summary = "Authenticates a user by username and password.")
     @RequestMapping(value = ["/authenticate"], method = [RequestMethod.POST])
     fun createAuthenticationToken(@RequestBody authenticationRequest: JwtRequest): ResponseEntity<JwtResponse> {
         authenticate(authenticationRequest.username, authenticationRequest.password)

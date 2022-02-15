@@ -49,13 +49,13 @@ class UserController {
     }
 
     /**
-     * Gets currently logged-in user in a list if present.
+     * Gets currently logged-in user or 404.
      */
     @Operation(summary = "Gets current logged in user model.")
     @GetMapping("/user")
-    fun getCurrentUser(): ResponseEntity<List<User>> {
+    fun getCurrentUser(): ResponseEntity<User> {
         return userService.getCurrentLoggedIn()?.let {
-            ResponseEntity.ok(listOf(it))
+            ResponseEntity.ok(it)
         } ?: ResponseEntity(HttpStatus.NOT_FOUND)
     }
 
