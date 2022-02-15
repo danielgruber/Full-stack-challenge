@@ -103,6 +103,7 @@ class UserService {
         val user = userRepo.getByUsername(username) ?: throw UsernameNotFoundException("User $username was not found for update")
 
         if (password != null) {
+            validatePasswordStrengthOrThrow(password)
             user.password = passwordEncoder.encode(password)
         }
 
@@ -135,7 +136,6 @@ class UserService {
         password: String
     ) {
         val user = userRepo.getByUsername(username) ?:  throw UsernameNotFoundException("User $username was not found for update")
-        validatePasswordStrengthOrThrow(password)
 
         if (!passwordEncoder.matches(password, user.password)) {
             throw PermissionException("You need to know the password of a user to delete it.")

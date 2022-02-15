@@ -47,8 +47,8 @@ class ProductService {
             throw InvalidRoleException("Can't create user as buyer.")
         }
 
-        if (cost % 5 != 0) {
-            throw InvalidCostException("Cost must be a multiple of 5")
+        if (cost % 5 != 0 || cost < 0) {
+            throw InvalidCostException("Cost must be a positive multiple of 5.")
         }
 
         val product = Product(
