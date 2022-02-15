@@ -1,6 +1,7 @@
 package tech.espero.gruber.fullstackchallenge.controller
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.BadCredentialsException
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
+import tech.espero.gruber.fullstackchallenge.exceptions.StatusException
 import tech.espero.gruber.fullstackchallenge.security.JwtTokenUtil
 import tech.espero.gruber.fullstackchallenge.security.JwtUserDetailsService
 
@@ -45,9 +47,9 @@ class AuthController {
         try {
             authenticationManager.authenticate(UsernamePasswordAuthenticationToken(username, password))
         } catch (e: DisabledException) {
-            throw Exception("USER_DISABLED", e)
+            throw StatusException("User was disabled", HttpStatus.FORBIDDEN)
         } catch (e: BadCredentialsException) {
-            throw Exception("INVALID_CREDENTIALS", e)
+            throw StatusException("Invalid username or password", HttpStatus.FORBIDDEN)
         }
     }
 }
