@@ -112,7 +112,7 @@ class ProductService {
         val product = productRepo.findByIdOrNull(uuid) ?: throw ProductNotFoundException()
 
         if (product.amountAvailable < amount) {
-            throw NotEnoughProductsException()
+            throw NotEnoughProductsException("There are not enough products available")
         }
 
         product.amountAvailable -= amount

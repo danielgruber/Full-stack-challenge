@@ -66,7 +66,7 @@ class CommerceService {
         val total = product.cost * amountOfProducts
 
         if (user.depositCents < total) {
-            throw NotEnoughMoneyException()
+            throw NotEnoughMoneyException("Please deposit enough money before buying")
         }
 
         val change = user.depositCents - total
