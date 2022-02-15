@@ -147,7 +147,7 @@ class UserService {
      * Validates password strength
      */
     private fun validatePasswordStrengthOrThrow(password: String) {
-        if (!Regex("/[a-zA-Z0-9]+/").matches(password) || password.length < 8) {
+        if (!Regex(".*[a-z]+.*").matches(password) || !Regex(".*[A-Z]+.*").matches(password) || !Regex(".*[0-9]+.*").matches(password) || password.length < 8) {
             throw PasswordTooWeakException("Password must be at least eight characters long and must contain at least one lowercase, one uppercase character and one number.")
         }
     }

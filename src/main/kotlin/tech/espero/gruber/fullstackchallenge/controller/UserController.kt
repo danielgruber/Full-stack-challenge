@@ -7,6 +7,9 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import tech.espero.gruber.fullstackchallenge.model.User
 import tech.espero.gruber.fullstackchallenge.service.UserService
+import javax.validation.Valid
+import javax.validation.constraints.NotBlank
+import javax.validation.constraints.NotEmpty
 
 /**
  * Provides CRUD endpoints for /user.
@@ -18,6 +21,7 @@ class UserController {
     private lateinit var userService: UserService
 
     data class CreateUserRequest(
+        @NotBlank(message = "username is mandatory")
         val username: String,
         val password: String,
         val userRole: User.UserRole
@@ -36,7 +40,7 @@ class UserController {
      */
     @Operation(summary = "Creates a new user.")
     @PostMapping("/user")
-    fun createUser(@RequestBody userRequest: CreateUserRequest): ResponseEntity<User> {
+    fun createUser(@Valid @RequestBody userRequest: CreateUserRequest): ResponseEntity<User> {
         return ResponseEntity(userService.createUser(
             userRequest.username,
             userRequest.password,

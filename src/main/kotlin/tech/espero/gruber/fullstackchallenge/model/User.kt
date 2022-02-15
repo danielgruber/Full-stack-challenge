@@ -7,6 +7,8 @@ import java.util.*
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
+import javax.validation.constraints.Min
+import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.Pattern
 
 /**
@@ -20,13 +22,16 @@ class User(
     val id: UUID? = null,
 
     @Column(nullable = false)
+    @NotEmpty
     private val username: String,
 
     @Column(nullable = false)
     @JsonIgnore
+    @NotEmpty
     private var password: String,
 
     @Column(nullable = false)
+    @Min(0)
     var depositCents: Int,
 
     @Column(nullable = false)

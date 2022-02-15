@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.userdetails.UsernameNotFoundException
+import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseBody
@@ -56,10 +57,16 @@ class ExceptionHandler
         val defaultHandlerExceptionResolver = DefaultHandlerExceptionResolver()
         defaultHandlerExceptionResolver.resolveException(request!!, response!!, this, e)
 
-        val status = if (e is StatusException) {
-            e.httpStatus
-        } else {
-            HttpStatus.INTERNAL_SERVER_ERROR
+        val status = when (e) {
+            is StatusException -> {
+                e.httpStatus
+            }
+            is HttpRequestMethodNotSupportedException -> {
+                HttpStatus.BAD_REQUEST
+            }
+            else -> {
+                HttpStatus.INTERNAL_SERVER_ERROR
+            }
         }
 
         // Standard

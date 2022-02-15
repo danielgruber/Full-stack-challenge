@@ -76,7 +76,7 @@ class CommerceService {
         var remainingChange = change
         while (remainingChange > 0) {
             val coin = allowedCoins.filter {
-                it < remainingChange
+                it <= remainingChange
             }.maxOrNull()!!
             changeCoins.add(coin)
             remainingChange -= coin

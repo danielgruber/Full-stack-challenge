@@ -8,6 +8,10 @@ import org.springframework.web.bind.annotation.*
 import tech.espero.gruber.fullstackchallenge.model.Product
 import tech.espero.gruber.fullstackchallenge.service.ProductService
 import java.util.*
+import javax.validation.Valid
+import javax.validation.constraints.Min
+import javax.validation.constraints.NotBlank
+import javax.validation.constraints.NotEmpty
 
 /**
  * Implements all CRUD methods for /product.
@@ -18,8 +22,11 @@ class ProductController {
     private lateinit var productService: ProductService
 
     data class CreateOrUpdateProductRequest(
+        @NotBlank(message = "name is mandatory")
         val name: String? = null,
+        @Min(1)
         val cost: Int? = null,
+        @Min(0)
         val amountAvailable: Int? = null
     )
 
@@ -37,7 +44,7 @@ class ProductController {
      */
     @Operation(summary = "Create a new product.")
     @PostMapping("/product")
-    fun create(@RequestBody createRequest: CreateOrUpdateProductRequest): ResponseEntity<Product> {
+    fun create(@Valid @RequestBody createRequest: CreateOrUpdateProductRequest): ResponseEntity<Product> {
         return ResponseEntity.ok(productService.create(
             UUID.randomUUID(),
             createRequest.name!!,
@@ -62,7 +69,7 @@ class ProductController {
      */
     @Operation(summary = "Creates or updates a product.")
     @PutMapping("/product/{uuid}")
-    fun createOrUpdate(@PathVariable uuid: UUID, @RequestBody createRequest: CreateOrUpdateProductRequest): ResponseEntity<Product> {
+    fun createOrUpdate(@PathVariable uuid: UUID, @Valid @RequestBody createRequest: CreateOrUpdateProductRequest): ResponseEntity<Product> {
         return ResponseEntity.ok(productService.createOrUpdate(
             uuid,
             createRequest.name,

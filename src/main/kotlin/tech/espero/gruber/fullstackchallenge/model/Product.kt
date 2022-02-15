@@ -3,6 +3,7 @@ package tech.espero.gruber.fullstackchallenge.model
 import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.Min
+import javax.validation.constraints.NotEmpty
 
 /**
  * Represents a product to be bought.
@@ -23,6 +24,7 @@ class Product(
     var cost: Int,
 
     @Column(nullable = false)
+    @NotEmpty
     var productName: String,
 
     @ManyToOne(optional = false)
