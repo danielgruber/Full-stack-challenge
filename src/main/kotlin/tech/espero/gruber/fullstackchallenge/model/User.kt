@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import java.util.*
+import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
+import javax.persistence.OneToMany
 import javax.validation.constraints.Min
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.Pattern
@@ -48,6 +50,12 @@ class User(
             return this.name
         }
     }
+
+    // this is just needed to automatically remove all products if user is removed.
+    @JsonIgnore
+    @OneToMany(mappedBy = "seller", cascade = [CascadeType.REMOVE])
+    private lateinit var products: List<Product> ;
+
 
     override fun toString(): String {
         return "User(id=$id, username='$username', password='$password', depositCents=$depositCents, role=$role)"
