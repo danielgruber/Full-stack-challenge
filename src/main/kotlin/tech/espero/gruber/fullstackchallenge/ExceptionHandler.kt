@@ -20,6 +20,10 @@ import javax.servlet.http.HttpServletResponse
 
 /**
  * Generic Error Handler for application.
+ * Can be easily extended by adding handleException methods annotated with @ExceptionHandler(CustomException::class).
+ * Then the error can be treated in a special way.
+ *
+ * By default, this application uses [StatusException] in order to allow an exception to define its own HTTP status.
  */
 @ControllerAdvice
 class ExceptionHandler
@@ -33,7 +37,7 @@ class ExceptionHandler
         request: HttpServletRequest?,
         response: HttpServletResponse?
     ): ResponseEntity<*> {
-        logger.warn("Internal Server Error: $e", e)
+        logger.warn("Username not found: $e", e)
 
         // Override if the exception is known by spring
         val defaultHandlerExceptionResolver = DefaultHandlerExceptionResolver()
@@ -51,7 +55,7 @@ class ExceptionHandler
         request: HttpServletRequest?,
         response: HttpServletResponse?
     ): ResponseEntity<*> {
-        logger.warn("Internal Server Error: $e", e)
+        logger.warn("Generic Exception: $e", e)
 
         // Override if the exception is known by spring
         val defaultHandlerExceptionResolver = DefaultHandlerExceptionResolver()

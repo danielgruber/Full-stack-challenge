@@ -93,7 +93,8 @@ class UserService {
     }
 
     /**
-     * Updates a given user.
+     * Updates a given user's password.
+     * Does not validate old password.
      */
     fun updateUser(
         username: String,
@@ -111,7 +112,7 @@ class UserService {
     }
 
     /**
-     * Updates a givens user balance.
+     * Updates the balance of a given user. Does not validate permissions.
      */
     fun updateUserBalance(
         username: String,
@@ -127,7 +128,7 @@ class UserService {
     }
 
     /**
-     * deletes a given user.
+     * deletes a given user. Validates for permission by validating the password.
      */
     fun deleteUser(
         username: String,
@@ -144,7 +145,10 @@ class UserService {
     }
 
     /**
-     * Validates password strength
+     * Validates password strength. It required at least
+     * - one lowercase char
+     * - one uppercase char
+     * - one number
      */
     private fun validatePasswordStrengthOrThrow(password: String) {
         if (!Regex(".*[a-z]+.*").matches(password) || !Regex(".*[A-Z]+.*").matches(password) || !Regex(".*[0-9]+.*").matches(password) || password.length < 8) {
