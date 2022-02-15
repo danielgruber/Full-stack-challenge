@@ -1,0 +1,10 @@
+springdoc:
+  packages-to-scan: tech.espero.gruber.fullstackchallenge.controller
+  paths-to-match: /**
+security:
+  oauth2:
+    client:
+      client-id: frontend
+      client-secret: BNJc6*f4yDYkKF9KDb7n6Z7VTmqfdxHVKvccDkyF8o2zUYzwoZA2E@UCZnNYcVyajvU
+jwt:
+  secret: BBAC6D9D202A21D6627C6D8C975333FB08A0C3325C281F1DB91D2FE95170B24C

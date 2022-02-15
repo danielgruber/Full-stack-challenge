@@ -3,9 +3,7 @@ package tech.espero.gruber.fullstackchallenge.service
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
-import tech.espero.gruber.fullstackchallenge.exceptions.PermissionException
-import tech.espero.gruber.fullstackchallenge.exceptions.ProductAlreadyExistsException
-import tech.espero.gruber.fullstackchallenge.exceptions.ProductNotFoundException
+import tech.espero.gruber.fullstackchallenge.exceptions.*
 import tech.espero.gruber.fullstackchallenge.model.Product
 import tech.espero.gruber.fullstackchallenge.model.User
 import tech.espero.gruber.fullstackchallenge.repository.ProductRepository
@@ -46,7 +44,11 @@ class ProductService {
         }
 
         if (userService.getCurrentLoggedIn()!!.role != User.UserRole.SELLER) {
-            throw PermissionException("Can't create user as buyer.")
+            throw InvalidRoleException("Can't create user as buyer.")
+        }
+
+        if (cost % 5 != 0) {
+            throw InvalidCostException("Cost must be a multiple of 5")
         }
 
         val product = Product(
@@ -91,12 +93,31 @@ class ProductService {
         }
 
         if (cost != null) {
+            if (cost % 5 != 0) {
+                throw InvalidCostException("Cost must be a multiple of 5")
+            }
+
             product.cost = cost
         }
 
         productRepo.save(product)
 
         return product
+    }
+
+    /**
+     * Service method to buy a number of products.
+     */
+    fun buyProduct(uuid: UUID, amount: Int) {
+        val product = productRepo.findByIdOrNull(uuid) ?: throw ProductNotFoundException()
+
+        if (product.amountAvailable < amount) {
+            throw NotEnoughProductsException()
+        }
+
+        product.amountAvailable -= amount
+
+        productRepo.save(product)
     }
 
     /**

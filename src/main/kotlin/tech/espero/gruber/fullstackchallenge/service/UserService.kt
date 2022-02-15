@@ -105,6 +105,22 @@ class UserService {
     }
 
     /**
+     * Updates a givens user balance.
+     */
+    fun updateUserBalance(
+        username: String,
+        deposit: Int
+    ): User {
+        val user = userRepo.getByUsername(username) ?: throw UsernameNotFoundException("User $username was not found for update")
+
+        user.depositCents = deposit
+
+        userRepo.save(user)
+
+        return user
+    }
+
+    /**
      * deletes a given user.
      */
     fun deleteUser(
