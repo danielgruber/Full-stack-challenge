@@ -35,6 +35,7 @@ class CommerceService {
 
     /**
      * Deposits coins to the vending machine.
+     * Only [allowedCoins] can be deposited.
      */
     @Transactional
     fun deposit(coins: List<Int>): User {
@@ -54,6 +55,10 @@ class CommerceService {
         )
     }
 
+    /**
+     * Buys a given product by id and amount.
+     * Will throw exceptions if any edge case occurres.
+     */
     @Transactional
     fun buy(productId: UUID, amountOfProducts: Int): BuyFeedback {
         val user = getBuyerUserOrThrow()
@@ -85,6 +90,9 @@ class CommerceService {
         )
     }
 
+    /**
+     * Resets user deposit.
+     */
     fun reset(): User {
         val user = getBuyerUserOrThrow()
         userService.updateUserBalance(user.username, 0)
@@ -92,6 +100,10 @@ class CommerceService {
         return user
     }
 
+    /**
+     * Gets current user and validates BUYER role.
+     * Throws exceptions if not matching criteria.
+     */
     private fun getBuyerUserOrThrow(): User {
         val user = userService.getCurrentLoggedIn() ?: throw PermissionException("No user logged in")
 

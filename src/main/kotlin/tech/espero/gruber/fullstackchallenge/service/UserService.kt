@@ -9,12 +9,16 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import tech.espero.gruber.fullstackchallenge.exceptions.PasswordTooWeakException
 import tech.espero.gruber.fullstackchallenge.exceptions.PermissionException
 import tech.espero.gruber.fullstackchallenge.exceptions.UserAlreadyExistsException
 import tech.espero.gruber.fullstackchallenge.model.User
 import tech.espero.gruber.fullstackchallenge.repository.UserRepository
 import java.util.*
 
+/**
+ * Handles all business logic for users.
+ */
 @Service
 class UserService {
     @Autowired
@@ -74,6 +78,8 @@ class UserService {
             throw UserAlreadyExistsException()
         }
 
+        validatePasswordStrengthOrThrow(password)
+
         val user = User(
             UUID.randomUUID(),
             username,
@@ -128,11 +134,21 @@ class UserService {
         password: String
     ) {
         val user = userRepo.getByUsername(username) ?:  throw UsernameNotFoundException("User $username was not found for update")
+        validatePasswordStrengthOrThrow(password)
 
         if (!passwordEncoder.matches(password, user.password)) {
             throw PermissionException("You need to know the password of a user to delete it.")
         }
 
         userRepo.delete(user)
+    }
+
+    /**
+     * Validates password strength
+     */
+    private fun validatePasswordStrengthOrThrow(password: String) {
+        if (!Regex("/[a-zA-Z0-9]+/").matches(password) || password.length < 8) {
+            throw PasswordTooWeakException("Password must be at least eight characters long and must contain at least one lowercase, one uppercase character and one number.")
+        }
     }
 }

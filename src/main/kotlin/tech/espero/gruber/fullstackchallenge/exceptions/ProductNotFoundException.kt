@@ -1,3 +1,8 @@
 package tech.espero.gruber.fullstackchallenge.exceptions
 
-class ProductNotFoundException: Exception()
+import org.springframework.http.HttpStatus
+
+/**
+ * Thrown when product was not found.
+ */
+class ProductNotFoundException(message: String? = null): StatusException(message, HttpStatus.NOT_FOUND)

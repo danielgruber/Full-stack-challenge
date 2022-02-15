@@ -30,7 +30,7 @@ class AppSecurityConfig: WebSecurityConfigurerAdapter() {
     override fun configure(http: HttpSecurity) {
         http.csrf().disable()
             .antMatcher("/**").authorizeRequests()
-            .antMatchers(HttpMethod.POST, "/users").permitAll()
+            .antMatchers(HttpMethod.POST, "/user").permitAll()
             .antMatchers( "/authenticate", "/swagger-ui*/**", "/v3/api-docs*/**").permitAll()
             .anyRequest().authenticated().and()
             .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
